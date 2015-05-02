@@ -54,7 +54,7 @@ public class PhoneNumberUtilsWrapper {
             CharSequence number) {
         final TelecomManager telecomManager =
                 (TelecomManager) mContext.getSystemService(Context.TELECOM_SERVICE);
-        return number!= null && telecomManager.isVoiceMailNumber(accountHandle, number.toString());
+        return number!= null && false /*FIXME telecomManager.isVoiceMailNumber(accountHandle, number.toString())*/;
     }
 
     /**

@@ -40,6 +40,7 @@ public class DialerSettingsActivity extends PreferenceActivity {
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
     }
 
+    public static final String ACTION_CHANGE_PHONE_ACCOUNTS ="android.telecom.action.CHANGE_PHONE_ACCOUNTS";
     @Override
     public void onBuildHeaders(List<Header> target) {
         final Header generalSettingsHeader = new Header();
@@ -52,7 +53,7 @@ public class DialerSettingsActivity extends PreferenceActivity {
             final TelephonyManager telephonyManager =
                     (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
             // Show "Call Settings" if there is one SIM and "Phone Accounts" if there are more.
-            if (telephonyManager.getPhoneCount() <= 1) {
+            if (1/*FIXMEtelephonyManager.getPhoneCount()*/ <= 1) {
                 final Header callSettingsHeader = new Header();
                 Intent callSettingsIntent = new Intent(TelecomManager.ACTION_SHOW_CALL_SETTINGS);
                 callSettingsIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -63,7 +64,7 @@ public class DialerSettingsActivity extends PreferenceActivity {
             } else {
                 final Header phoneAccountSettingsHeader = new Header();
                 Intent phoneAccountSettingsIntent =
-                        new Intent(TelecomManager.ACTION_CHANGE_PHONE_ACCOUNTS);
+                        new Intent(/*TelecomManager.*/ACTION_CHANGE_PHONE_ACCOUNTS);
                 phoneAccountSettingsIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
                 phoneAccountSettingsHeader.titleRes = R.string.phone_account_settings_label;
@@ -113,7 +114,7 @@ public class DialerSettingsActivity extends PreferenceActivity {
         UserManager userManager = (UserManager) getSystemService(Context.USER_SERVICE);
         List<UserHandle> userHandles = userManager.getUserProfiles();
         for (int i = 0; i < userHandles.size(); i++){
-            if (userHandles.get(i).myUserId() == OWNER_HANDLE_ID) {
+            if (true/*FIXME userHandles.get(i).myUserId() == OWNER_HANDLE_ID*/) {
                 return true;
             }
         }

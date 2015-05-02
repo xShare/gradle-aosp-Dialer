@@ -760,7 +760,7 @@ public class CallLogAdapter extends GroupingListAdapter
         final long photoId = info.photoId;
         final Uri photoUri = info.photoUri;
         CharSequence formattedNumber = info.formattedNumber == null
-                ? null : PhoneNumberUtils.ttsSpanAsPhoneNumber(info.formattedNumber);
+                ? null : null /*FIXME PhoneNumberUtils.ttsSpanAsPhoneNumber(info.formattedNumber)*/;
         final int[] callTypes = getCallTypes(c, count);
         final String geocode = c.getString(CallLogQuery.GEOCODED_LOCATION);
         final int sourceType = info.sourceType;

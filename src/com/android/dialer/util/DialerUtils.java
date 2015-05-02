@@ -38,8 +38,6 @@ import android.widget.Toast;
 import com.android.contacts.common.ContactsUtils;
 import com.android.contacts.common.interactions.TouchPointManager;
 import com.android.dialer.R;
-import com.android.incallui.CallCardFragment;
-import com.android.incallui.Log;
 
 import java.util.List;
 import java.util.Locale;
@@ -69,17 +67,19 @@ public class DialerUtils {
      * @param msgId Resource ID of the string to display in an error message if the activity is
      *              not found.
      */
+    public static final String ACTION_CALL_PRIVILEGED = "android.intent.action.CALL_PRIVILEGED";
+    public static final String EXTRA_OUTGOING_CALL_EXTRAS = "android.telecom.extra.OUTGOING_CALL_EXTRAS";
     public static void startActivityWithErrorToast(Context context, Intent intent, int msgId) {
         try {
             if ((Intent.ACTION_CALL.equals(intent.getAction())
-                    || Intent.ACTION_CALL_PRIVILEGED.equals(intent.getAction()))
+                    || /*Intent.*/ACTION_CALL_PRIVILEGED.equals(intent.getAction()))
                             && context instanceof Activity) {
                 // All dialer-initiated calls should pass the touch point to the InCallUI
                 Point touchPoint = TouchPointManager.getInstance().getPoint();
                 if (touchPoint.x != 0 || touchPoint.y != 0) {
                     Bundle extras = new Bundle();
                     extras.putParcelable(TouchPointManager.TOUCH_POINT, touchPoint);
-                    intent.putExtra(TelecomManager.EXTRA_OUTGOING_CALL_EXTRAS, extras);
+                    intent.putExtra(/*TelecomManager.*/EXTRA_OUTGOING_CALL_EXTRAS, extras);
                 }
 
                 ((Activity) context).startActivityForResult(intent, 0);

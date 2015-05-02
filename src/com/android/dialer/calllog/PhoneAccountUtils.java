@@ -38,9 +38,9 @@ public class PhoneAccountUtils {
                 (TelecomManager) context.getSystemService(Context.TELECOM_SERVICE);
 
         List<PhoneAccountHandle> subscriptionAccountHandles = new ArrayList<PhoneAccountHandle>();
-        List<PhoneAccountHandle> accountHandles = telecomManager.getCallCapablePhoneAccounts();
+        List<PhoneAccountHandle> accountHandles = null; // FIXME telecomManager.getCallCapablePhoneAccounts();
         for (PhoneAccountHandle accountHandle : accountHandles) {
-            PhoneAccount account = telecomManager.getPhoneAccount(accountHandle);
+            PhoneAccount account = null;// FIXME telecomManager.getPhoneAccount(accountHandle);
             if (account.hasCapabilities(PhoneAccount.CAPABILITY_SIM_SUBSCRIPTION)) {
                 subscriptionAccountHandles.add(accountHandle);
             }
@@ -76,7 +76,7 @@ public class PhoneAccountUtils {
     public static int getAccountColor(Context context, PhoneAccountHandle accountHandle) {
         TelecomManager telecomManager =
                 (TelecomManager) context.getSystemService(Context.TELECOM_SERVICE);
-        final PhoneAccount account = telecomManager.getPhoneAccount(accountHandle);
+        final PhoneAccount account = null;// FIXME telecomManager.getPhoneAccount(accountHandle);
 
         // For single-sim devices the PhoneAccount will be NO_HIGHLIGHT_COLOR by default, so it is
         // safe to always use the account highlight color.
@@ -91,10 +91,13 @@ public class PhoneAccountUtils {
             PhoneAccountHandle accountHandle) {
         TelecomManager telecomManager =
                 (TelecomManager) context.getSystemService(Context.TELECOM_SERVICE);
+        /* FIXME
         final PhoneAccount account = telecomManager.getPhoneAccount(accountHandle);
         if (!telecomManager.hasMultipleCallCapableAccounts()) {
             return null;
         }
         return account;
+        //*/
+        return null;
     }
 }

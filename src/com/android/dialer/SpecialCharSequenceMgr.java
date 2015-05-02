@@ -209,10 +209,10 @@ public class SpecialCharSequenceMgr {
                         PhoneAccountUtils.getSubscriptionPhoneAccounts(context);
 
                 boolean hasUserSelectedDefault = subscriptionAccountHandles.contains(
-                        telecomManager.getUserSelectedOutgoingPhoneAccount());
+                        null /*FIXME telecomManager.getUserSelectedOutgoingPhoneAccount()*/);
 
                 if (subscriptionAccountHandles.size() == 1 || hasUserSelectedDefault) {
-                    Uri uri = telecomManager.getAdnUriForPhoneAccount(null);
+                    Uri uri = null; //FIXME telecomManager.getAdnUriForPhoneAccount(null);
                     handleAdnQuery(handler, sc, uri);
                 } else if (subscriptionAccountHandles.size() > 1){
                     SelectPhoneAccountListener listener = new SelectPhoneAccountListener() {
@@ -220,7 +220,7 @@ public class SpecialCharSequenceMgr {
                         public void onPhoneAccountSelected(PhoneAccountHandle selectedAccountHandle,
                                 boolean setDefault) {
                             Uri uri =
-                                    telecomManager.getAdnUriForPhoneAccount(selectedAccountHandle);
+                                    null;// FIXME telecomManager.getAdnUriForPhoneAccount(selectedAccountHandle);
                             handleAdnQuery(handler, sc, uri);
                             //TODO: show error dialog if result isn't valid
                         }
@@ -271,7 +271,7 @@ public class SpecialCharSequenceMgr {
             List<PhoneAccountHandle> subscriptionAccountHandles =
                     PhoneAccountUtils.getSubscriptionPhoneAccounts(context);
             boolean hasUserSelectedDefault = subscriptionAccountHandles.contains(
-                    telecomManager.getUserSelectedOutgoingPhoneAccount());
+                    null/*FIXMEtelecomManager.getUserSelectedOutgoingPhoneAccount()*/);
 
             if (subscriptionAccountHandles.size() == 1 || hasUserSelectedDefault) {
                 // Don't bring up the dialog for single-SIM or if the default outgoing account is
@@ -282,7 +282,7 @@ public class SpecialCharSequenceMgr {
                     @Override
                     public void onPhoneAccountSelected(PhoneAccountHandle selectedAccountHandle,
                             boolean setDefault) {
-                        telecomManager.handleMmi(selectedAccountHandle, input);
+                        telecomManager.handleMmi(/*FIXME selectedAccountHandle,*/ input);
                         //TODO: show error dialog if result isn't valid
                     }
                     @Override
@@ -309,14 +309,14 @@ public class SpecialCharSequenceMgr {
                     R.string.imei : R.string.meid;
 
             List<String> deviceIds = new ArrayList<String>();
-            for (int slot = 0; slot < telephonyManager.getPhoneCount(); slot++) {
-                deviceIds.add(telephonyManager.getDeviceId(slot));
+            for (int slot = 0; slot < 1/*FIXME telephonyManager.getPhoneCount()*/; slot++) {
+                deviceIds.add(telephonyManager.getDeviceId(/*FIXME slot*/));
             }
 
             AlertDialog alert = new AlertDialog.Builder(context)
                     .setTitle(labelResId)
                     .setItems(deviceIds.toArray(new String[deviceIds.size()]), null)
-                    .setPositiveButton(R.string.ok, null)
+                    .setPositiveButton(/*R.string.ok*/android.R.string.ok, null)
                     .setCancelable(false)
                     .show();
             return true;

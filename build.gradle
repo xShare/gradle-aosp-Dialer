@@ -1,0 +1,53 @@
+//apply plugin: 'com.android.library'
+apply plugin: 'com.android.application'
+
+buildscript {
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.2.2'
+    }
+}
+
+dependencies {
+    //compile 'com.android.support:support-v4:22.0'
+    //compile 'com.android.support:support-v13:22.1.1'
+    //compile files('../ContactsCommon/libs/guava-18.0.jar')
+    //compile project(':PhoneCommon')
+    //compile files('libs/libphonenumber-6.2.jar')
+    //compile files('libs/geocoder-2.9.jar')
+    //compile project(':vcard')
+    compile project(':ContactsCommon')
+    compile files('libs/jsr305.jar')
+}
+
+android {
+
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
+
+    defaultConfig {
+        minSdkVersion 22
+        targetSdkVersion 22
+    }
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            resources.srcDirs = ['src']
+            aidl.srcDirs = ['src']
+            renderscript.srcDirs = ['src']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+        }
+
+        instrumentTest.setRoot('tests')
+    }
+    // FIXME shold Remove
+    lintOptions {
+        abortOnError false
+    }
+}

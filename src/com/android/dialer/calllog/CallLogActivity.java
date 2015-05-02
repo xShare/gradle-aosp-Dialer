@@ -264,7 +264,7 @@ public class CallLogActivity extends Activity implements CallLogQueryHandler.Lis
 
     @Override
     public void onPageSelected(int position) {
-        if (isResumed()) {
+        if (false /*FIXME isResumed()*/) {
             sendScreenViewForChildFragment(position);
         }
         mViewPagerTabs.onPageSelected(position);

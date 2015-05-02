@@ -120,12 +120,13 @@ public class GeneralSettingsFragment extends PreferenceFragment
      * @param preference The preference to be changed
      * @param objValue The value of the selection, NOT its localized display value.
      */
+    public static final String VIBRATE_WHEN_RINGING = "vibrate_when_ringing";
     @Override
     public boolean onPreferenceChange(Preference preference, Object objValue) {
         if (preference == mVibrateWhenRinging) {
             boolean doVibrate = (Boolean) objValue;
             Settings.System.putInt(mContext.getContentResolver(),
-                    Settings.System.VIBRATE_WHEN_RINGING, doVibrate ? 1 : 0);
+                    /*Settings.System.*/VIBRATE_WHEN_RINGING, doVibrate ? 1 : 0);
         }
         return true;
     }

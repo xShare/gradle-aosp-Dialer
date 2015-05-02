@@ -30,8 +30,8 @@ import android.widget.SeekBar;
 
 import com.android.dialer.R;
 import com.android.dialer.util.AsyncTaskExecutor;
-import com.android.ex.variablespeed.MediaPlayerProxy;
-import com.android.ex.variablespeed.SingleThreadedMediaPlayerProxy;
+// FIXME import com.android.ex.variablespeed.MediaPlayerProxy;
+// FIXME import com.android.ex.variablespeed.SingleThreadedMediaPlayerProxy;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 
@@ -151,7 +151,7 @@ public class VoicemailPlaybackPresenter {
     private final AtomicInteger mDuration = new AtomicInteger(0);
 
     private final PlaybackView mView;
-    private final MediaPlayerProxy mPlayer;
+    private final /*MediaPlayerProxy*/ Object mPlayer;
     private final PositionUpdater mPositionUpdater;
 
     /** Voicemail uri to play. */
@@ -170,7 +170,7 @@ public class VoicemailPlaybackPresenter {
     private PowerManager.WakeLock mWakeLock;
     private AsyncTask<Void, ?, ?> mPrepareTask;
 
-    public VoicemailPlaybackPresenter(PlaybackView view, MediaPlayerProxy player,
+    public VoicemailPlaybackPresenter(PlaybackView view, /*MediaPlayerProxy*/ Object player,
             Uri voicemailUri, ScheduledExecutorService executorService,
             boolean startPlayingImmediately, AsyncTaskExecutor asyncTaskExecutor,
             PowerManager.WakeLock wakeLock) {
@@ -308,11 +308,11 @@ public class VoicemailPlaybackPresenter {
                     @Override
                     public Exception doInBackground(Void... params) {
                         try {
-                            mPlayer.reset();
+                            /* FIXME mPlayer.reset();
                             mPlayer.setDataSource(mView.getDataSourceContext(), mVoicemailUri);
                             mPlayer.setAudioStreamType(PLAYBACK_STREAM);
                             mPlayer.prepare();
-                            mDuration.set(mPlayer.getDuration());
+                            mDuration.set(mPlayer.getDuration());*/
                             return null;
                         } catch (Exception e) {
                             return e;
@@ -341,8 +341,8 @@ public class VoicemailPlaybackPresenter {
         mView.setPositionSeekListener(new PlaybackPositionListener());
         mView.setStartStopListener(new StartStopButtonListener());
         mView.setSpeakerphoneListener(new SpeakerphoneListener());
-        mPlayer.setOnErrorListener(new MediaPlayerErrorListener());
-        mPlayer.setOnCompletionListener(new MediaPlayerCompletionListener());
+        /*FIXME mPlayer.setOnErrorListener(new MediaPlayerErrorListener());
+        mPlayer.setOnCompletionListener(new MediaPlayerCompletionListener());*/
         mView.setSpeakerPhoneOn(mView.isSpeakerPhoneOn());
         mView.setRateDecreaseButtonListener(createRateDecreaseListener());
         mView.setRateIncreaseButtonListener(createRateIncreaseListener());
@@ -359,9 +359,9 @@ public class VoicemailPlaybackPresenter {
 
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(CLIP_POSITION_KEY, mView.getDesiredClipPosition());
-        if (!mPlayer.isPlaying()) {
+/* FIXME         if (!mPlayer.isPlaying()) {
             outState.putBoolean(PAUSED_STATE_KEY, true);
-        }
+        }*/
     }
 
     public void onDestroy() {
@@ -369,7 +369,7 @@ public class VoicemailPlaybackPresenter {
             mPrepareTask.cancel(false);
             mPrepareTask = null;
         }
-        mPlayer.release();
+        // FIXME mPlayer.release();
         if (mFetchResultHandler != null) {
             mFetchResultHandler.destroy();
             mFetchResultHandler = null;
@@ -446,10 +446,10 @@ public class VoicemailPlaybackPresenter {
         @Override
         public Exception doInBackground(Void... params) {
             try {
-                mPlayer.reset();
+/* FIXME                 mPlayer.reset();
                 mPlayer.setDataSource(mView.getDataSourceContext(), mVoicemailUri);
                 mPlayer.setAudioStreamType(PLAYBACK_STREAM);
-                mPlayer.prepare();
+                mPlayer.prepare();*/
                 return null;
             } catch (Exception e) {
                 return e;
@@ -460,15 +460,15 @@ public class VoicemailPlaybackPresenter {
         public void onPostExecute(Exception exception) {
             mPrepareTask = null;
             if (exception == null) {
-                final int duration = mPlayer.getDuration();
+                final int duration = 0;// FIXME mPlayer.getDuration();
                 mDuration.set(duration);
                 int startPosition =
                     constrain(mClipPositionInMillis, 0, duration);
-                mPlayer.seekTo(startPosition);
+                //FIXME mPlayer.seekTo(startPosition);
                 mView.setClipPosition(startPosition, duration);
                 try {
                     // Can throw RejectedExecutionException
-                    mPlayer.start();
+                    //FIXME mPlayer.start();
                     mView.playbackStarted();
                     if (!mWakeLock.isHeld()) {
                         mWakeLock.acquire();
@@ -500,7 +500,7 @@ public class VoicemailPlaybackPresenter {
     private void handleError(Exception e) {
         mView.playbackError(e);
         mPositionUpdater.stopUpdating();
-        mPlayer.release();
+        // FIXME mPlayer.release();
     }
 
     public void handleCompletion(MediaPlayer mediaPlayer) {
@@ -516,9 +516,9 @@ public class VoicemailPlaybackPresenter {
         // Always disable on stop.
         mView.disableProximitySensor();
         mView.setClipPosition(clipPosition, duration);
-        if (mPlayer.isPlaying()) {
-            mPlayer.pause();
-        }
+// FIXME         if (mPlayer.isPlaying()) {
+//            mPlayer.pause();
+//        }
     }
 
     private class PlaybackPositionListener implements SeekBar.OnSeekBarChangeListener {
@@ -526,19 +526,19 @@ public class VoicemailPlaybackPresenter {
 
         @Override
         public void onStartTrackingTouch(SeekBar arg0) {
-            if (mPlayer.isPlaying()) {
-                mShouldResumePlaybackAfterSeeking = true;
-                stopPlaybackAtPosition(mPlayer.getCurrentPosition(), mDuration.get());
-            } else {
-                mShouldResumePlaybackAfterSeeking = false;
-            }
+// FIXME            if (mPlayer.isPlaying()) {
+//                mShouldResumePlaybackAfterSeeking = true;
+//                stopPlaybackAtPosition(mPlayer.getCurrentPosition(), mDuration.get());
+//            } else {
+//                mShouldResumePlaybackAfterSeeking = false;
+//            }
         }
 
         @Override
         public void onStopTrackingTouch(SeekBar arg0) {
-            if (mPlayer.isPlaying()) {
+/*FIXME             if (mPlayer.isPlaying()) {
                 stopPlaybackAtPosition(mPlayer.getCurrentPosition(), mDuration.get());
-            }
+            }*/
             if (mShouldResumePlaybackAfterSeeking) {
                 resetPrepareStartPlaying(mView.getDesiredClipPosition());
             }
@@ -551,7 +551,7 @@ public class VoicemailPlaybackPresenter {
     }
 
     private void changeRate(float rate, int stringResourceId) {
-        ((SingleThreadedMediaPlayerProxy) mPlayer).setVariableSpeed(rate);
+        //FIXME ((SingleThreadedMediaPlayerProxy) mPlayer).setVariableSpeed(rate);
         mView.setRateDisplay(rate, stringResourceId);
     }
 
@@ -560,25 +560,25 @@ public class VoicemailPlaybackPresenter {
         public void onClick(View v) {
             boolean previousState = mView.isSpeakerPhoneOn();
             mView.setSpeakerPhoneOn(!previousState);
-            if (mPlayer.isPlaying() && previousState) {
-                // If we are currently playing and we are disabling the speaker phone, enable the
-                // sensor.
-                mView.enableProximitySensor();
-            } else {
-                // If we are not currently playing, disable the sensor.
-                mView.disableProximitySensor();
-            }
+// FIXME            if (mPlayer.isPlaying() && previousState) {
+//                // If we are currently playing and we are disabling the speaker phone, enable the
+//                // sensor.
+//                mView.enableProximitySensor();
+//            } else {
+//                // If we are not currently playing, disable the sensor.
+//                mView.disableProximitySensor();
+//            }
         }
     }
 
     private class StartStopButtonListener implements View.OnClickListener {
         @Override
         public void onClick(View arg0) {
-            if (mPlayer.isPlaying()) {
-                stopPlaybackAtPosition(mPlayer.getCurrentPosition(), mDuration.get());
-            } else {
-                resetPrepareStartPlaying(mView.getDesiredClipPosition());
-            }
+// FIXME            if (mPlayer.isPlaying()) {
+//                stopPlaybackAtPosition(mPlayer.getCurrentPosition(), mDuration.get());
+//            } else {
+//                resetPrepareStartPlaying(mView.getDesiredClipPosition());
+//            }
         }
     }
 
@@ -600,7 +600,7 @@ public class VoicemailPlaybackPresenter {
                         // This task has been canceled. Just stop now.
                         return;
                     }
-                    currentPosition = mPlayer.getCurrentPosition();
+                    // FIXME currentPosition = mPlayer.getCurrentPosition();
                 }
                 mView.setClipPosition(currentPosition, mDuration.get());
             }
@@ -638,9 +638,9 @@ public class VoicemailPlaybackPresenter {
     }
 
     public void onPause() {
-        if (mPlayer.isPlaying()) {
-            stopPlaybackAtPosition(mPlayer.getCurrentPosition(), mDuration.get());
-        }
+// FIXME        if (mPlayer.isPlaying()) {
+//            stopPlaybackAtPosition(mPlayer.getCurrentPosition(), mDuration.get());
+//        }
         if (mPrepareTask != null) {
             mPrepareTask.cancel(false);
             mPrepareTask = null;

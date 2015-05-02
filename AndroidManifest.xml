@@ -262,7 +262,7 @@
         <!-- Main in-call UI activity.  This is never launched directly
              from outside the phone app; instead, it's either launched by
              the OutgoingCallBroadcaster (for outgoing calls), or as the
-             fullScreenIntent of a notification (for incoming calls.) -->
+             fullScreenIntent of a notification (for incoming calls.)
         <activity android:name="com.android.incallui.InCallActivity"
                   android:theme="@style/Theme.InCallScreen"
                   android:label="@string/phoneAppLabel"
@@ -281,8 +281,8 @@
                   android:noHistory="true"
                   android:excludeFromRecents="true"
                   android:screenOrientation="nosensor" />
-
-        <!-- BroadcastReceiver for receiving Intents from Notification mechanism. -->
+ -->
+        <!-- BroadcastReceiver for receiving Intents from Notification mechanism.
         <receiver android:name="com.android.incallui.InCallApp$NotificationBroadcastReceiver"
                   android:exported="false">
             <intent-filter>
@@ -296,5 +296,6 @@
                 <action android:name="android.telecom.InCallService"/>
             </intent-filter>
         </service>
+         -->
     </application>
 </manifest>

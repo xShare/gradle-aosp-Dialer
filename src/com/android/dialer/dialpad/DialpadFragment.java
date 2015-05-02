@@ -923,7 +923,7 @@ public class DialpadFragment extends Fragment
                     List<PhoneAccountHandle> subscriptionAccountHandles =
                             PhoneAccountUtils.getSubscriptionPhoneAccounts(getActivity());
                     boolean hasUserSelectedDefault = subscriptionAccountHandles.contains(
-                            getTelecomManager().getUserSelectedOutgoingPhoneAccount());
+                            null /*FIXME getTelecomManager().getUserSelectedOutgoingPhoneAccount()*/);
                     boolean needsAccountDisambiguation = subscriptionAccountHandles.size() > 1
                             && !hasUserSelectedDefault;
 
@@ -1527,13 +1527,13 @@ public class DialpadFragment extends Fragment
     private boolean isVoicemailAvailable() {
         try {
             PhoneAccountHandle defaultUserSelectedAccount =
-                    getTelecomManager().getUserSelectedOutgoingPhoneAccount();
+                    null /*FIXME getTelecomManager().getUserSelectedOutgoingPhoneAccount()*/;
             if (defaultUserSelectedAccount == null) {
                 // In a single-SIM phone, there is no default outgoing phone account selected by
                 // the user, so just call TelephonyManager#getVoicemailNumber directly.
                 return getTelephonyManager().getVoiceMailNumber() != null;
             } else {
-                return getTelecomManager().hasVoiceMailNumber(defaultUserSelectedAccount);
+                return false /*FIXME getTelecomManager().hasVoiceMailNumber(defaultUserSelectedAccount)*/;
             }
         } catch (SecurityException se) {
             // Possibly no READ_PHONE_STATE privilege.

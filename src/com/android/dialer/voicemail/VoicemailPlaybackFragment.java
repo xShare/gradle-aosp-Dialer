@@ -44,8 +44,8 @@ import com.android.contacts.commonbind.analytics.AnalyticsUtil;
 import com.android.dialer.ProximitySensorAware;
 import com.android.dialer.R;
 import com.android.dialer.util.AsyncTaskExecutors;
-import com.android.ex.variablespeed.MediaPlayerProxy;
-import com.android.ex.variablespeed.VariableSpeed;
+// FIXME import com.android.ex.variablespeed.MediaPlayerProxy;
+// FIXME import com.android.ex.variablespeed.VariableSpeed;
 
 import com.google.common.base.Preconditions;
 
@@ -76,7 +76,7 @@ public class VoicemailPlaybackFragment extends Fragment {
 
     private VoicemailPlaybackPresenter mPresenter;
     private static int mMediaPlayerRefCount = 0;
-    private static MediaPlayerProxy mMediaPlayerInstance;
+    private static /*MediaPlayerProxy*/ Object mMediaPlayerInstance;
     private static ScheduledExecutorService mScheduledExecutorService;
     private View mPlaybackLayout;
 
@@ -137,11 +137,11 @@ public class VoicemailPlaybackFragment extends Fragment {
                 mPlaybackLayout);
     }
 
-    private static synchronized MediaPlayerProxy getMediaPlayerInstance() {
+    private static synchronized /*MediaPlayerProxy*/ Object getMediaPlayerInstance() {
         ++mMediaPlayerRefCount;
         if (mMediaPlayerInstance == null) {
-            mMediaPlayerInstance = VariableSpeed.createVariableSpeed(
-                    getScheduledExecutorServiceInstance());
+            mMediaPlayerInstance = null /* FIXME VariableSpeed.createVariableSpeed(
+                    getScheduledExecutorServiceInstance())*/;
         }
         return mMediaPlayerInstance;
     }
@@ -164,7 +164,7 @@ public class VoicemailPlaybackFragment extends Fragment {
             mScheduledExecutorService = null;
         }
         if (mMediaPlayerInstance != null) {
-            mMediaPlayerInstance.release();
+            // FIXME mMediaPlayerInstance.release();
             mMediaPlayerInstance = null;
         }
     }
