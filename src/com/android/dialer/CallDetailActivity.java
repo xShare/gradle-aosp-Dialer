@@ -70,6 +70,8 @@ import com.android.dialer.voicemail.VoicemailStatusHelperImpl;
 
 import java.util.List;
 
+import cn.purplechen.utils.AppUtils;
+
 /**
  * Displays the details of a specific call log entry.
  * <p>
@@ -350,7 +352,11 @@ public class CallDetailActivity extends Activity implements ProximitySensorAware
         final int numIds = ids == null ? 0 : ids.length;
         final Uri[] uris = new Uri[numIds];
         for (int index = 0; index < numIds; ++index) {
-            uris[index] = ContentUris.withAppendedId(Calls.CONTENT_URI_WITH_VOICEMAIL, ids[index]);
+            if(AppUtils.isSystemApp()) {
+                uris[index] = ContentUris.withAppendedId(Calls.CONTENT_URI_WITH_VOICEMAIL, ids[index]);
+            } else {
+                uris[index] = ContentUris.withAppendedId(Calls.CONTENT_URI, ids[index]);
+            }
         }
         return uris;
     }
@@ -712,8 +718,13 @@ public class CallDetailActivity extends Activity implements ProximitySensorAware
                 new AsyncTask<Void, Void, Void>() {
                     @Override
                     public Void doInBackground(Void... params) {
-                        getContentResolver().delete(Calls.CONTENT_URI_WITH_VOICEMAIL,
-                                Calls._ID + " IN (" + callIds + ")", null);
+                        if(AppUtils.isSystemApp()) {
+                            getContentResolver().delete(Calls.CONTENT_URI_WITH_VOICEMAIL,
+                                    Calls._ID + " IN (" + callIds + ")", null);
+                        } else {
+                            getContentResolver().delete(Calls.CONTENT_URI,
+                                    Calls._ID + " IN (" + callIds + ")", null);
+                        }
                         return null;
                     }
 

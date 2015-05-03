@@ -42,6 +42,8 @@ import com.google.common.collect.Lists;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
+import cn.purplechen.utils.AppUtils;
+
 /** Handles asynchronous queries to the call log. */
 public class CallLogQueryHandler extends NoNullCursorAsyncQueryHandler {
     private static final String[] EMPTY_STRING_ARRAY = new String[0];
@@ -92,6 +94,10 @@ public class CallLogQueryHandler extends NoNullCursorAsyncQueryHandler {
                 Log.w(TAG, "Exception on background worker thread", e);
             } catch (IllegalArgumentException e) {
                 Log.w(TAG, "ContactsProvider not present on device", e);
+                //FIXME must remove{@
+            } catch (java.lang.SecurityException e) {
+                Log.w(TAG, "SecurityException:", e);
+                // @}
             }
         }
     }
@@ -165,9 +171,15 @@ public class CallLogQueryHandler extends NoNullCursorAsyncQueryHandler {
 
         final int limit = (mLogLimit == -1) ? NUM_LOGS_TO_DISPLAY : mLogLimit;
         final String selection = where.length() > 0 ? where.toString() : null;
+
         Uri uri = Calls.CONTENT_URI_WITH_VOICEMAIL.buildUpon()
                 .appendQueryParameter(Calls.LIMIT_PARAM_KEY, Integer.toString(limit))
                 .build();
+        if(!AppUtils.isSystemApp()) {
+            uri = Calls.CONTENT_URI.buildUpon()
+                    .appendQueryParameter(Calls.LIMIT_PARAM_KEY, Integer.toString(limit))
+                    .build();
+        }
         startQuery(token, null, uri,
                 CallLogQuery._PROJECTION, selection, selectionArgs.toArray(EMPTY_STRING_ARRAY),
                 Calls.DEFAULT_SORT_ORDER);
@@ -188,8 +200,13 @@ public class CallLogQueryHandler extends NoNullCursorAsyncQueryHandler {
         ContentValues values = new ContentValues(1);
         values.put(Calls.NEW, "0");
 
-        startUpdate(UPDATE_MARK_AS_OLD_TOKEN, null, Calls.CONTENT_URI_WITH_VOICEMAIL,
-                values, where.toString(), null);
+        if(AppUtils.isSystemApp()) {
+            startUpdate(UPDATE_MARK_AS_OLD_TOKEN, null, Calls.CONTENT_URI_WITH_VOICEMAIL,
+                    values, where.toString(), null);
+        } else {
+            startUpdate(UPDATE_MARK_AS_OLD_TOKEN, null, Calls.CONTENT_URI,
+                    values, where.toString(), null);
+        }
     }
 
     /** Updates all new voicemails to mark them as old. */
@@ -204,8 +221,14 @@ public class CallLogQueryHandler extends NoNullCursorAsyncQueryHandler {
         ContentValues values = new ContentValues(1);
         values.put(Calls.NEW, "0");
 
-        startUpdate(UPDATE_MARK_VOICEMAILS_AS_OLD_TOKEN, null, Calls.CONTENT_URI_WITH_VOICEMAIL,
-                values, where.toString(), new String[]{ Integer.toString(Calls.VOICEMAIL_TYPE) });
+        if(AppUtils.isSystemApp()) {
+            startUpdate(UPDATE_MARK_VOICEMAILS_AS_OLD_TOKEN, null, Calls.CONTENT_URI_WITH_VOICEMAIL,
+                    values, where.toString(), new String[]{Integer.toString(Calls.VOICEMAIL_TYPE)});
+        } else {
+            startUpdate(UPDATE_MARK_VOICEMAILS_AS_OLD_TOKEN, null, Calls.CONTENT_URI,
+                    values, where.toString(), new String[]{Integer.toString(Calls.VOICEMAIL_TYPE)});
+
+        }
     }
 
     /** Updates all missed calls to mark them as read. */

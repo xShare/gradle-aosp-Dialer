@@ -26,6 +26,8 @@ import android.telecom.PhoneAccountHandle;
 import com.android.contacts.common.CallUtil;
 import com.android.dialer.CallDetailActivity;
 
+import cn.purplechen.utils.AppUtils;
+
 /**
  * Used to create an intent to attach to an action in the call log.
  * <p>
@@ -117,8 +119,13 @@ public abstract class IntentProvider {
                     intent.putExtra(CallDetailActivity.EXTRA_CALL_LOG_IDS, extraIds);
                 } else {
                     // If there is a single item, use the direct URI for it.
-                    intent.setData(ContentUris.withAppendedId(
-                            Calls.CONTENT_URI_WITH_VOICEMAIL, id));
+                    if (AppUtils.isSystemApp()) {
+                        intent.setData(ContentUris.withAppendedId(
+                                Calls.CONTENT_URI_WITH_VOICEMAIL, id));
+                    } else {
+                        intent.setData(ContentUris.withAppendedId(
+                                Calls.CONTENT_URI, id));
+                    }
                 }
                 return intent;
             }

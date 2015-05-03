@@ -17,10 +17,13 @@
 package com.android.dialer;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.android.contacts.common.ContactPhotoManager;
 import com.android.contacts.common.extensions.ExtensionsFactory;
 import com.android.contacts.commonbind.analytics.AnalyticsUtil;
+
+import cn.purplechen.utils.AppUtils;
 
 public class DialerApplication extends Application {
 
@@ -31,6 +34,8 @@ public class DialerApplication extends Application {
         super.onCreate();
         ExtensionsFactory.init(getApplicationContext());
         AnalyticsUtil.initialize(this);
+        boolean systemApp = AppUtils.isSystemApp(this);
+        Log.d("DialerApplication","systemApp:" + systemApp);
     }
 
     @Override

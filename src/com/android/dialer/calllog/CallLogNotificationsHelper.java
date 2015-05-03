@@ -20,6 +20,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.telecom.TelecomManager;
 
+import cn.purplechen.utils.AppUtils;
+
 /**
  * Helper class operating on call log notifications.
  */
@@ -28,7 +30,9 @@ public class CallLogNotificationsHelper {
     public static void removeMissedCallNotifications(Context context) {
         TelecomManager telecomManager = (TelecomManager)
                 context.getSystemService(Context.TELECOM_SERVICE);
-        telecomManager.cancelMissedCallsNotification();
+        if(AppUtils.isSystemApp()) {
+            telecomManager.cancelMissedCallsNotification();
+        }
     }
 
     /** Update the voice mail notifications. */

@@ -90,7 +90,7 @@ public class DefaultVoicemailNotifier implements VoicemailNotifier {
     public void updateNotification(Uri newCallUri) {
         // Lookup the list of new voicemails to include in the notification.
         // TODO: Move this into a service, to avoid holding the receiver up.
-        final NewCall[] newCalls = mNewCallsQuery.query();
+        final NewCall[] newCalls = null;//FIXME mNewCallsQuery.query();
 
         if (newCalls == null) {
             // Query failed, just return.
